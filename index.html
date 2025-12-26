@@ -1,1 +1,975 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provenir | Powered by Agnes</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,600;1,400;1,600&display=swap');
 
+        :root {
+            /* PALETA AGNES */
+            --bg-deep-green: #0e2a22;
+            --bg-dark: #05110e;
+            --text-gold: #d4af37;
+            --text-cream: #f2f0e6;
+            --accent-terracotta: #c27a4e;
+            
+            --glass: rgba(14, 42, 34, 0.7);
+            --border-gold: rgba(212, 175, 55, 0.3);
+            
+            /* Altura base para Desktop (Grande como pediste) */
+            --nav-height: 130px; 
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-cream);
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            width: 100%;
+            transition: background 0.5s ease;
+        }
+
+        /* --- LANGUAGE LOGIC --- */
+        body.lang-es .text-en { display: none !important; }
+        body.lang-en .text-es { display: none !important; }
+
+        .lang-toggle {
+            background: transparent;
+            border: 1px solid var(--border-gold);
+            color: var(--text-gold);
+            padding: 5px 12px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 15px;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+            border-radius: 2px;
+        }
+        .lang-toggle:hover {
+            background: var(--text-gold);
+            color: var(--bg-deep-green);
+        }
+
+        /* --- BACKGROUND & TEXTURES --- */
+        .fixed-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -2;
+            background: radial-gradient(circle at 50% 30%, var(--bg-deep-green) 0%, var(--bg-dark) 90%);
+        }
+
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyBAMAAADsEZWCAAAAGFBMVEUAAAA5OTkAAABMTExERERmZmYzMzPMzMxloRvSAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfmCxQOMCQ041qZAAAAH0lEQVQ4y2NgQAX8DIo4BcRwiDGzaBWMNovaRhWjAAA30AGf61bV4wAAAABJRU5ErkJggg==');
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--nav-height);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 4rem;
+            background: rgba(5, 17, 14, 0.98);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-gold);
+            transition: all 0.3s ease; /* Transición suave al cambiar tamaño */
+        }
+
+        .brand-area { 
+            display: flex; 
+            align-items: center; 
+            height: 100%; 
+            /* Eliminado gap extra ya que solo hay un logo */
+            flex-shrink: 0; 
+        }
+        
+        .brand-mark {
+            height: 100px; /* Grande en Desktop */
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.2));
+            transition: height 0.3s ease;
+        }
+
+        /* Elementos eliminados: brand-text y brand-separator */
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-cream);
+            text-decoration: none;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: color 0.3s;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            white-space: nowrap; /* Evita que el texto salte de línea */
+        }
+
+        .nav-links a:hover { color: var(--text-gold); }
+
+        .cta-btn {
+            padding: 0.8rem 2rem;
+            background: transparent;
+            border: 1px solid var(--text-gold);
+            color: var(--text-gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        .cta-btn:hover {
+            background: var(--text-gold);
+            color: var(--bg-deep-green);
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem;
+            line-height: 1;
+            margin-bottom: 1rem;
+            color: var(--text-gold);
+            font-style: italic;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            color: var(--text-gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+
+        p, li {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-cream);
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        ul { list-style: none; }
+        li { padding-left: 1.5rem; position: relative; margin-bottom: 0.8rem; }
+        li::before {
+            content: ''; position: absolute; left: 0; top: 10px;
+            width: 4px; height: 4px; background: var(--text-gold);
+            border-radius: 50%;
+        }
+
+        /* --- LAYOUTS --- */
+        main {
+            width: 100%;
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+
+        section {
+            width: 100%;
+            min-height: 100vh;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 10rem 8rem 6rem; /* Top padding alto para compensar navbar */
+            position: relative;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        section.in-view { opacity: 1; }
+
+        .content-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .card:hover {
+            border-color: var(--text-gold);
+            background: rgba(212, 175, 55, 0.05);
+            transform: translateY(-5px);
+        }
+
+        .big-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            color: var(--accent-terracotta);
+            display: block;
+            line-height: 1;
+        }
+
+        .key-message {
+            margin-top: 2rem;
+            padding-left: 2rem;
+            border-left: 2px solid var(--text-gold);
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.3rem;
+            color: var(--text-gold);
+        }
+
+        /* --- CHART STYLES (GENERIC) --- */
+        .chart-wrapper {
+            width: 100%;
+            height: 300px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 20px;
+            position: relative;
+        }
+        
+        .bar {
+            width: 100%;
+            background: linear-gradient(to top, #2e1d16, var(--accent-terracotta));
+            height: 0; 
+            transition: height 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+            position: relative;
+        }
+        
+        /* --- PREMIUM CHART STYLES (Section 4 Specific) --- */
+        .premium-chart-wrapper {
+            background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            border: 1px solid var(--border-gold);
+            border-radius: 8px;
+            padding: 2rem;
+            height: 400px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            position: relative;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+        }
+
+        .bar-pillar {
+            width: 80px;
+            background: linear-gradient(to bottom, #444, #222);
+            border: 1px solid #666;
+            border-bottom: none;
+            position: relative;
+            transition: height 1.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            height: 0;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        .bar-pillar.gold {
+            background: linear-gradient(to bottom, var(--text-gold), #8a6e1d);
+            border: 1px solid #fff;
+            border-bottom: none;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3), inset 0 0 20px rgba(255,255,255,0.2);
+        }
+        
+        .bar-pillar::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent 40%, rgba(255,255,255,0.2) 50%, transparent 60%);
+            opacity: 0.5;
+        }
+
+        .chart-label {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            color: var(--text-cream);
+            text-transform: uppercase;
+        }
+
+        .chart-val-float {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: #fff;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+            opacity: 0;
+            transition: opacity 0.5s 1.5s, top 0.5s 1.5s;
+        }
+        
+        section.in-view .chart-val-float {
+            opacity: 1;
+            top: -60px;
+        }
+
+        /* Connecting Line Animation */
+        .growth-line {
+            position: absolute;
+            top: 30%;
+            left: 30%;
+            width: 40%;
+            height: 2px;
+            background: linear-gradient(90deg, #444, var(--text-gold));
+            transform-origin: left;
+            transform: scaleX(0);
+            transition: transform 1s 1s ease-out;
+        }
+        
+        .growth-indicator {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--text-gold);
+            padding: 5px 15px;
+            border-radius: 20px;
+            color: var(--text-gold);
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 1s 1.5s;
+        }
+
+        section.in-view .growth-line { transform: scaleX(1); }
+        section.in-view .growth-indicator { opacity: 1; }
+
+        /* Trigger Animations */
+        section.in-view .bar-1 { height: 5%; }
+        section.in-view .bar-2 { height: 17%; }
+        section.in-view .bar-3 { height: 95%; }
+        
+        section.in-view .pillar-std { height: 60%; }
+        section.in-view .pillar-prem { height: 90%; }
+
+        .bar-value {
+            position: absolute; top: -30px; color: var(--text-gold);
+            font-family: 'Playfair Display', serif; font-size: 1.1rem;
+            width: 100%; text-align: center; opacity: 0; transition: opacity 1s 1s;
+        }
+        section.in-view .bar-value { opacity: 1; }
+        
+        .img-container {
+            width: 100%;
+            height: 100%;
+            min-height: 300px;
+            background: #000;
+            border: 1px solid var(--border-gold);
+            position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+        }
+        
+        .img-placeholder {
+            width: 100%; height: 100%; object-fit: cover; opacity: 0.6;
+        }
+
+        /* --- RESPONSIVE OPTIMIZATIONS (TABLET & MOBILE) --- */
+        @media (max-width: 1200px) {
+            nav { padding: 0 2rem; --nav-height: 100px; }
+            .brand-mark { height: 70px; }
+            section { padding: 8rem 4rem 4rem; }
+        }
+
+        @media (max-width: 768px) {
+            nav { 
+                padding: 0.5rem 1.5rem; 
+                height: auto; 
+                flex-direction: column; 
+                gap: 10px;
+                padding-bottom: 1rem;
+            }
+            .brand-area { 
+                width: 100%; 
+                justify-content: center; 
+                margin: 0.5rem 0; 
+            }
+            .brand-mark { height: 60px; }
+            
+            .nav-links { display: none; } /* Ocultar menú en móvil para limpieza */
+            
+            section { 
+                padding: 10rem 1.5rem 4rem; 
+                justify-content: flex-start; 
+                min-height: auto; 
+            }
+            h1 { font-size: 3rem; }
+            h2 { font-size: 2.2rem; }
+            .content-split { grid-template-columns: 1fr; gap: 2rem; }
+            main { scroll-snap-type: none; } 
+            
+            .cta-btn { font-size: 0.7rem; padding: 0.5rem 1rem; }
+            .lang-toggle { position: absolute; right: 1rem; top: 1rem; margin: 0; }
+        }
+    </style>
+</head>
+<body class="lang-es">
+
+    <div class="fixed-background"></div>
+    <div class="noise-overlay"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="brand-area">
+            <!-- Solo Isotipo -->
+            <img src="https://uploads.onecompiler.io/4474z9257/448r8ahpg/FnF_Mark_White.png" alt="Fine & Fair Mark" class="brand-mark">
+        </div>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <ul class="nav-links">
+                <li><a href="#problem"><span class="text-es">Problema</span><span class="text-en">Problem</span></a></li>
+                <li><a href="#solution"><span class="text-es">Solución</span><span class="text-en">Solution</span></a></li>
+                <li><a href="#economics"><span class="text-es">Economía</span><span class="text-en">Economics</span></a></li>
+                <li><a href="#team"><span class="text-es">Equipo</span><span class="text-en">Team</span></a></li>
+            </ul>
+            
+            <button class="lang-toggle" onclick="toggleLanguage()">ES | EN</button>
+        </div>
+    </nav>
+
+    <main id="main-scroller">
+        
+        <!-- 1. INTRO (HERO) -->
+        <section id="home">
+            <div class="content-split">
+                <div>
+                    <!-- Reemplazado con el logo horizontal (Texto) -->
+                    <img src="https://uploads.onecompiler.io/4474z9257/448r8ahpg/FnF_Horz_White.png" alt="Provenir Logo" style="height: 200px; width: auto; margin-bottom: 2rem; filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.3));">
+                    <h3>
+                        <span class="text-es">Infraestructura de Origen Blockchain</span>
+                        <span class="text-en">Blockchain-driven Origin Infrastructure</span>
+                    </h3>
+                    <div style="height: 1px; width: 60px; background: var(--text-gold); margin: 2rem 0;"></div>
+                    <p>
+                        <span class="text-es">Trazabilidad blockchain e infraestructura de mercado para commodities agroforestales premium.</span>
+                        <span class="text-en">Blockchain-driven traceability and market infrastructure for premium agroforestry commodities.</span>
+                    </p>
+                    <div class="key-message">
+                        <span class="text-es">“Esto no es chocolate. Es infraestructura de origen, confianza y datos para commodities premium.”</span>
+                        <span class="text-en">“This is not chocolate. It is origin infrastructure, trust, and data for premium commodities.”</span>
+                    </div>
+                </div>
+                <div class="img-container" style="height: 400px;">
+                    <img src="https://anecacao.com/wp-content/uploads/2023/05/Los-Tipos-de-Cacao.jpg" alt="Cacao" class="img-placeholder">
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. PROBLEM -->
+        <section id="problem">
+            <h2>
+                <span class="text-es">El sistema global del agro está roto</span>
+                <span class="text-en">The global agro system is broken</span>
+            </h2>
+            <div class="content-split">
+                <div>
+                    <ul>
+                        <li>
+                            <span class="text-es">El modelo de commodity destruye valor en origen.</span>
+                            <span class="text-en">Commodity cacao destroys value at origin.</span>
+                        </li>
+                        <li>
+                            <span class="text-es">Agricultores mal pagados = Sin calidad ni sostenibilidad.</span>
+                            <span class="text-en">Farmers are underpaid → no quality, no sustainability.</span>
+                        </li>
+                        <li>
+                            <span class="text-es">Sin trazabilidad real, sin datos confiables.</span>
+                            <span class="text-en">No real traceability, no trustworthy data.</span>
+                        </li>
+                        <li>
+                            <span class="text-es">Clima, enfermedades y shocks de precios amenazan la cadena.</span>
+                            <span class="text-en">Climate, disease & price shocks threaten the entire supply chain.</span>
+                        </li>
+                    </ul>
+                    <div class="key-message">
+                        <span class="text-es">El problema no es agrícola, es estructural y de información.</span>
+                        <span class="text-en">The problem is not agricultural, it is structural and informational.</span>
+                    </div>
+                </div>
+                <div class="img-container" style="height: 350px;">
+                    <img src="https://www.lavanguardia.com/files/og_thumbnail/uploads/2018/10/25/5fa4481aed7e5.jpeg" alt="Broken System" class="img-placeholder">
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. WHY NOW -->
+        <section id="why-now">
+            <h2>
+                <span class="text-es">¿Por qué ahora?</span>
+                <span class="text-en">Why now?</span>
+            </h2>
+            <div class="card-grid">
+                <div class="card">
+                    <span class="big-number">+500%</span>
+                    <p style="margin-top:1rem;">
+                        <span class="text-es">Precios del cacao en 3 años.</span>
+                        <span class="text-en">Cocoa prices up in 3 years.</span>
+                    </p>
+                </div>
+                <div class="card">
+                    <h3 style="color:var(--text-gold);">
+                        <span class="text-es">Escasez</span>
+                        <span class="text-en">Declining Harvests</span>
+                    </h3>
+                    <p>
+                        <span class="text-es">Cosechas disminuyendo a pesar de precios récord.</span>
+                        <span class="text-en">Harvests declining despite record prices.</span>
+                    </p>
+                </div>
+                <div class="card">
+                    <h3 style="color:var(--text-gold);">
+                        <span class="text-es">Cumplimiento (EUDR)</span>
+                        <span class="text-en">Compliance (EUDR)</span>
+                    </h3>
+                    <p>
+                        <span class="text-es">Compradores y reguladores exigen cumplimiento verificable.</span>
+                        <span class="text-en">Buyers, regulators and brands demand verifiable compliance.</span>
+                    </p>
+                </div>
+            </div>
+            <div class="key-message" style="margin-top: 2rem;">
+                <span class="text-es">El sistema actual ya no aguanta. El mercado necesita una nueva capa de confianza.</span>
+                <span class="text-en">The current system can no longer hold. The market needs a new trust layer.</span>
+            </div>
+        </section>
+
+        <!-- 4. OPPORTUNITY -->
+        <section id="opportunity">
+            <h2>
+                <span class="text-es">De infraestructura de commodity a premium</span>
+                <span class="text-en">From commodity to premium infrastructure</span>
+            </h2>
+            <div class="content-split">
+                <div>
+                    <ul>
+                        <li>
+                            <span class="text-es">Márgenes de chocolate premium: 70%–99%.</span>
+                            <span class="text-en">Premium chocolate margins: 70%–99%.</span>
+                        </li>
+                        <li>
+                            <span class="text-es">Demanda de origen único y sabor fino creciendo globalmente.</span>
+                            <span class="text-en">Fine flavor & single-origin demand growing globally.</span>
+                        </li>
+                        <li>
+                            <span class="text-es">La captura de valor se mueve al origen con la infraestructura correcta.</span>
+                            <span class="text-en">Value capture shifts to origin with the right infrastructure.</span>
+                        </li>
+                    </ul>
+                    <div class="key-message">
+                        <span class="text-es">No es una oportunidad de producto. Es una oportunidad de infraestructura escalable.</span>
+                        <span class="text-en">It is not a product opportunity. It is a scalable infrastructure opportunity.</span>
+                    </div>
+                </div>
+                
+                <!-- PREMIUM CHART (PILLARS) -->
+                <div class="premium-chart-wrapper">
+                    <div style="width: 30%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; z-index: 2;">
+                        <span class="chart-val-float" style="font-size: 1.5rem; color: #aaa;">Low</span>
+                        <div class="bar-pillar pillar-std"></div>
+                        <div class="chart-label">
+                            <span class="text-es">Modelo Commodity</span>
+                            <span class="text-en">Commodity Model</span>
+                        </div>
+                    </div>
+                    
+                    <div class="growth-line"></div>
+                    <div class="growth-indicator">
+                        <span class="text-es">INFRAESTRUCTURA +</span>
+                        <span class="text-en">INFRASTRUCTURE +</span>
+                    </div>
+
+                    <div style="width: 30%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; z-index: 2;">
+                        <span class="chart-val-float" style="color: var(--text-gold);">99%</span>
+                        <div class="bar-pillar gold pillar-prem"></div>
+                        <div class="chart-label" style="color: var(--text-gold); font-weight: bold;">
+                            <span class="text-es">Modelo Provenir</span>
+                            <span class="text-en">Provenir Model</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. SOLUTION -->
+        <section id="solution">
+            <h2>
+                <span class="text-es">La Solución: Provenir</span>
+                <span class="text-en">The Solution: Provenir</span>
+            </h2>
+            <div class="content-split">
+                <div>
+                    <h3 style="color:var(--text-gold);">
+                        <span class="text-es">Infraestructura de origen impulsada por blockchain</span>
+                        <span class="text-en">Origin infrastructure powered by blockchain</span>
+                    </h3>
+                    <ul>
+                        <li><span class="text-es">Trazabilidad punta a punta (finca a comprador).</span><span class="text-en">End-to-end traceability from farm to buyer.</span></li>
+                        <li><span class="text-es">Registros inmutables basados en Blockchain.</span><span class="text-en">Blockchain-based immutable records.</span></li>
+                        <li><span class="text-es">IA para calidad, rendimiento y precios.</span><span class="text-en">AI-driven quality, yield & pricing intelligence.</span></li>
+                    </ul>
+                </div>
+                <div class="img-container" style="height: 350px; border: 1px solid var(--text-gold);">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000&auto=format&fit=crop" alt="Dashboard" class="img-placeholder">
+                </div>
+            </div>
+            <div class="key-message">
+                <span class="text-es">Provenir es la capa que conecta origen, datos y mercados premium.</span>
+                <span class="text-en">Provenir is the layer connecting origin, data, and premium markets.</span>
+            </div>
+        </section>
+
+        <!-- 6. HOW IT WORKS -->
+        <section id="how-it-works">
+            <h2>
+                <span class="text-es">Cómo funciona</span>
+                <span class="text-en">How Provenir works</span>
+            </h2>
+            <div class="card-grid">
+                <div class="card">
+                    <h3 style="color:var(--text-gold);">1. Capture</h3>
+                    <p>
+                        <span class="text-es">Agricultores capturan datos vía app (fotos, EXIF).</span>
+                        <span class="text-en">Farmers capture data via mobile app (photos, EXIF).</span>
+                    </p>
+                </div>
+                <div class="card">
+                    <h3 style="color:var(--text-gold);">2. Analyze</h3>
+                    <p>
+                        <span class="text-es">IA + visión computarizada analizan calidad y riesgo.</span>
+                        <span class="text-en">AI + computer vision analyze quality & risk.</span>
+                    </p>
+                </div>
+                <div class="card">
+                    <h3 style="color:var(--text-gold);">3. Secure</h3>
+                    <p>
+                        <span class="text-es">Blockchain asegura inmutabilidad.</span>
+                        <span class="text-en">Blockchain records ensure immutability.</span>
+                    </p>
+                </div>
+                <div class="card">
+                    <h3 style="color:var(--text-gold);">4. Trade</h3>
+                    <p>
+                        <span class="text-es">Compradores acceden a suministro verificado.</span>
+                        <span class="text-en">Buyers access verified, premium-grade supply.</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. BLOCKCHAIN LAYER -->
+        <section id="blockchain">
+            <h2>
+                <span class="text-es">Blockchain como infraestructura</span>
+                <span class="text-en">Blockchain as trust infrastructure</span>
+            </h2>
+            <div class="content-split">
+                <ul>
+                    <li><span class="text-es">Registros de trazabilidad inmutables.</span><span class="text-en">Immutable traceability records.</span></li>
+                    <li><span class="text-es">Certificaciones verificables y cumplimiento.</span><span class="text-en">Verifiable certifications & compliance.</span></li>
+                    <li><span class="text-es">Reducción de asimetría de información.</span><span class="text-en">Reduced information asymmetry.</span></li>
+                    <li><span class="text-es">Base para futura financiación (Banco de Cacao).</span><span class="text-en">Foundation for future financing (Banco de Cacao).</span></li>
+                </ul>
+                <div class="img-container" style="height: 350px; border: 1px solid var(--text-gold);">
+                    <img src="https://api.thsigne.com/wp-content/uploads/2021/06/Trazabilidad-Blockchain.jpg" alt="Blockchain Traceability" class="img-placeholder">
+                </div>
+            </div>
+            <div class="key-message">
+                <span class="text-es">Blockchain no es marketing. Es la infraestructura de confianza que desbloquea valor.</span>
+                <span class="text-en">Blockchain is not marketing. It is the trust infrastructure that unlocks value.</span>
+            </div>
+        </section>
+
+        <!-- 8. PRODUCT & STACK -->
+        <section id="product">
+            <h2>
+                <span class="text-es">Ecosistema de Producto</span>
+                <span class="text-en">Product ecosystem</span>
+            </h2>
+            <div class="card-grid">
+                <div class="card">
+                    <h3 style="color:var(--text-gold);">App</h3>
+                    <p>React Native (Farmer App)</p>
+                </div>
+                <div class="card">
+                    <h3 style="color:var(--text-gold);">Vision</h3>
+                    <p>Hugging Face (AI)</p>
+                </div>
+                <div class="card">
+                    <h3 style="color:var(--text-gold);">Data</h3>
+                    <p>Google Cloud, Gemini, Python</p>
+                </div>
+                <div class="card">
+                    <h3 style="color:var(--text-gold);">Processing</h3>
+                    <p>Fine & Fair, Agnes (Physical)</p>
+                </div>
+            </div>
+            <div class="key-message">
+                <span class="text-es">Tecnología real, operando en campo, no un concepto.</span>
+                <span class="text-en">Real technology, operating in the field, not a concept.</span>
+            </div>
+        </section>
+
+        <!-- 9. ECONOMICS -->
+        <section id="economics">
+            <h2>
+                <span class="text-es">La economía del chocolate premium</span>
+                <span class="text-en">The economics of premium chocolate</span>
+            </h2>
+            <div class="content-split">
+                <div>
+                    <ul>
+                        <li><span class="text-es">Farmgate: ~$8,400 / ton</span><span class="text-en">Farmgate: ~$8,400 / ton</span></li>
+                        <li><span class="text-es">Premium retail: $28k – $1.2M / ton</span><span class="text-en">Premium retail: $28k – $1.2M / ton</span></li>
+                        <li><span class="text-es">La captura de valor local cambia radicalmente los resultados.</span><span class="text-en">Local value capture radically changes outcomes.</span></li>
+                    </ul>
+                </div>
+                <!-- Value Uplift Chart -->
+                <div class="chart-wrapper">
+                    <div style="width: 20%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%;">
+                        <div class="bar bar-1"><span class="bar-value">$8.4k</span></div>
+                        <span style="font-size: 0.8rem; margin-top: 10px; opacity: 0.6;">FARMGATE</span>
+                    </div>
+                    <div style="width: 20%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%;">
+                        <div class="bar bar-2"><span class="bar-value">$28k</span></div>
+                        <span style="font-size: 0.8rem; margin-top: 10px; opacity: 0.6;">PREMIUM</span>
+                    </div>
+                    <div style="width: 20%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%;">
+                        <div class="bar bar-3 gold"><span class="bar-value" style="font-size: 1.5rem;">$160k</span></div>
+                        <span style="font-size: 0.8rem; margin-top: 10px; color: var(--text-gold);">PROVENIR</span>
+                    </div>
+                </div>
+            </div>
+            <div class="key-message">
+                <span class="text-es">El margen no está en volumen. Está en trazabilidad + acceso premium.</span>
+                <span class="text-en">Margin is not in volume. It is in traceability + premium access.</span>
+            </div>
+        </section>
+
+        <!-- 10. TRACTION -->
+        <section id="traction">
+            <h2>
+                <span class="text-es">Dónde estamos hoy</span>
+                <span class="text-en">Where we are today</span>
+            </h2>
+            <div class="card-grid">
+                <div class="card">
+                    <h3 style="color:var(--text-gold);">Onboarding</h3>
+                    <p><span class="text-es">Activo en Tumaco, Guaviare.</span><span class="text-en">Active farmer onboarding.</span></p>
+                </div>
+                <div class="card">
+                    <h3 style="color:var(--text-gold);">Tech</h3>
+                    <p><span class="text-es">App Pre-seed lista para despliegue.</span><span class="text-en">Pre-seed app weeks from deployment.</span></p>
+                </div>
+                <div class="card">
+                    <h3 style="color:var(--text-gold);">Value</h3>
+                    <p><span class="text-es">Inventario transformado: >$7M.</span><span class="text-en">Inventory transformed: >$7M.</span></p>
+                </div>
+                <div class="card">
+                    <h3 style="color:var(--text-gold);">Sales</h3>
+                    <p><span class="text-es">Vendiendo productos premium activamente.</span><span class="text-en">Actively selling premium products.</span></p>
+                </div>
+            </div>
+            <div class="key-message">
+                <span class="text-es">Esto ya está pasando. No es una hipótesis.</span>
+                <span class="text-en">This is already happening. Not a hypothesis.</span>
+            </div>
+        </section>
+
+        <!-- 11. MOAT -->
+        <section id="moat">
+            <h2>
+                <span class="text-es">Moat Defensible</span>
+                <span class="text-en">Defensible Moat</span>
+            </h2>
+            <div class="card-grid">
+                <div class="card"><p><span class="text-es">Datos históricos respaldados en Blockchain.</span><span class="text-en">Blockchain-backed historical data.</span></p></div>
+                <div class="card"><p><span class="text-es">Modelos IA entrenados con datos de origen.</span><span class="text-en">AI models trained on origin-specific data.</span></p></div>
+                <div class="card"><p><span class="text-es">Red de agricultores, compradores y procesadores.</span><span class="text-en">Network of farmers, buyers & processors.</span></p></div>
+                <div class="card"><p><span class="text-es">Certificación integrada + acceso a mercado.</span><span class="text-en">Integrated certification + market access.</span></p></div>
+            </div>
+            <div class="key-message">
+                <span class="text-es">Esto no se copia rápido. La ventaja crece con cada lote registrado.</span>
+                <span class="text-en">This cannot be copied fast. Advantage grows with every registered batch.</span>
+            </div>
+        </section>
+
+        <!-- 12. MARKET -->
+        <section id="market">
+            <h2>
+                <span class="text-es">Oportunidad de Mercado</span>
+                <span class="text-en">Market Opportunity</span>
+            </h2>
+            <div class="content-split">
+                <ul>
+                    <li><span class="text-es">Mercado global de cacao es masivo.</span><span class="text-en">Global cacao market is massive.</span></li>
+                    <li><span class="text-es">Segmento Premium & Fine Flavor en rápido crecimiento.</span><span class="text-en">Fast-growing premium & fine flavor segment.</span></li>
+                    <li><span class="text-es">Ruta de expansión a otros commodities agroforestales.</span><span class="text-en">Expansion path to other agroforestry commodities.</span></li>
+                    <li><span class="text-es">Modelo de infraestructura, no riesgo de producto único.</span><span class="text-en">Infrastructure model, not single-product risk.</span></li>
+                </ul>
+                <div class="card" style="text-align: center;">
+                    <span class="big-number">TAM</span>
+                    <p style="margin-top:1rem; color:var(--text-gold);">GLOBAL AGROFORESTRY</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 13. TEAM -->
+        <section id="team">
+            <h2>
+                <span class="text-es">Equipo</span>
+                <span class="text-en">Team</span>
+            </h2>
+            <div class="card-grid">
+                <div class="card">
+                    <h3 style="color:var(--text-gold);">Tyler Forvé</h3>
+                    <p style="font-size: 0.8rem; text-transform:uppercase;">Founder & CEO</p>
+                    <p style="font-size: 0.9rem; margin-top:0.5rem;">Food, Biotech, $30M+ raised.</p>
+                </div>
+                <div class="card">
+                    <h3 style="color:var(--text-gold);">Steve Halliburton</h3>
+                    <p style="font-size: 0.8rem; text-transform:uppercase;">CTO</p>
+                    <p style="font-size: 0.9rem; margin-top:0.5rem;">UC Berkeley, AI & Scale.</p>
+                </div>
+                <div class="card">
+                    <h3 style="color:var(--text-gold);">Will Schenk</h3>
+                    <p style="font-size: 0.8rem; text-transform:uppercase;">Automation</p>
+                    <p style="font-size: 0.9rem; margin-top:0.5rem;">30+ yrs Enterprise.</p>
+                </div>
+            </div>
+            <div class="key-message">
+                <span class="text-es">Equipo con credibilidad técnica + operativa + de mercado.</span>
+                <span class="text-en">Team with technical + operational + market credibility.</span>
+            </div>
+        </section>
+
+        <!-- 14. ASK / PATHS FORWARD -->
+        <section id="ask">
+            <h2>
+                <span class="text-es">Caminos a seguir</span>
+                <span class="text-en">Paths Forward</span>
+            </h2>
+            <div class="content-split">
+                <div class="card" style="border-color: var(--text-gold);">
+                    <h3 style="color:var(--text-gold);">
+                        <span class="text-es">Semilla (Seed)</span>
+                        <span class="text-en">Seed</span>
+                    </h3>
+                    <span class="big-number" style="font-size: 3rem;">$500k</span>
+                    <p style="margin-top: 1rem;">
+                        <span class="text-es">Onboard 20 asociaciones, escalar backend.</span>
+                        <span class="text-en">Onboard 20 associations, scale backend.</span>
+                    </p>
+                </div>
+                <div>
+                    <div class="key-message" style="margin-top: 0;">
+                        <span class="text-es">Capital para escalar infraestructura, no para experimentar.</span>
+                        <span class="text-en">Capital used for infrastructure, not to experiment.</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 5rem; text-align: center; opacity: 0.7;">
+                <!-- Logo añadido al footer -->
+                <img src="https://uploads.onecompiler.io/4474z9257/448r8ahpg/FnF_Mark_White.png" alt="Logo" style="height: 60px; margin-bottom: 1rem; opacity: 0.8;">
+                <p>tyler@agneschocolates.com</p>
+                <p>Provenir &copy; 2025</p>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Scroll Animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('section');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view');
+                    }
+                });
+            }, { threshold: 0.2 });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+
+        // Language Toggle
+        function toggleLanguage() {
+            const body = document.body;
+            if (body.classList.contains('lang-es')) {
+                body.classList.remove('lang-es');
+                body.classList.add('lang-en');
+            } else {
+                body.classList.remove('lang-en');
+                body.classList.add('lang-es');
+            }
+        }
+    </script>
+</body>
+</html>
